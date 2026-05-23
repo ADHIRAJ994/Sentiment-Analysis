@@ -1,0 +1,14 @@
+wordcloud
+seaborn
+matplotlib
+pandas
+numpy
+scikit-learn
+nltk
+gensim
+spacy
+textblob
+beautifulsoup4
+requests
+flask
+datasets
