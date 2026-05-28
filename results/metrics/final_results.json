@@ -1,0 +1,8 @@
+{
+    "textblob_accuracy": 0.68,
+    "bert_accuracy_default": 0.908,
+    "bert_accuracy_optimal": 0.905,
+    "bert_f1_optimal": 0.9049053963435445,
+    "optimal_threshold": 0.7500000000000002,
+    "improvement_over_baseline": 0.22499999999999998
+}

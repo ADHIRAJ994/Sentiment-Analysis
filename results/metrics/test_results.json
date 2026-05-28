@@ -1,0 +1,6 @@
+{
+    "test_loss": 0.2967615035250783,
+    "test_accuracy": 0.904,
+    "textblob_baseline": 0.68,
+    "improvement": 0.22399999999999998
+}
