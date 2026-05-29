@@ -290,11 +290,13 @@ jupyter notebook notebooks/04_deployment.ipynb
 
 ## 📁 Project Structure
 Sentiment Analysis Dashboard/
+
 │
 ├── 📁 data/
 │   ├── train_processed.csv          # Preprocessed training data
 │   └── test_processed.csv           # Preprocessed test data
 │
+
 ├── 📁 models/
 │   ├── best_model.pt                # Fine-tuned DistilBERT weights
 │   ├── model_config.json            # Model configuration
@@ -304,6 +306,7 @@ Sentiment Analysis Dashboard/
 │       ├── tokenizer_config.json
 │       └── vocab.txt
 │
+
 ├── 📁 results/
 │   ├── plots/
 │   │   ├── class_distribution.png
@@ -322,12 +325,14 @@ Sentiment Analysis Dashboard/
 │       ├── test_results.json
 │       └── final_results.json
 │
+
 ├── 📁 notebooks/
 │   ├── 01_eda.ipynb                 # Exploratory Data Analysis
 │   ├── 02_bert_model.ipynb          # BERT model training
 │   ├── 03_finetuning.ipynb          # Fine-tuning & optimization
 │   └── 04_deployment.ipynb          # Deployment preparation
 │
+
 ├── 📄 app.py                         # Streamlit dashboard
 ├── 📄 requirements.txt               # Python dependencies
 ├── 📄 config.json                    # Project configuration
