@@ -1,0 +1,16 @@
+{
+    "project_dir": "C:\\Python\\ML Intro\\Projects\\Sentiment Analysis Dashboard",
+    "train_samples": 10000,
+    "test_samples": 2000,
+    "num_classes": 2,
+    "classes": [
+        "Negative",
+        "Positive"
+    ],
+    "max_length": 256,
+    "model_name": "distilbert-base-uncased",
+    "batch_size": 16,
+    "epochs": 3,
+    "learning_rate": 2e-05,
+    "optimal_threshold": 0.7500000000000002
+}
