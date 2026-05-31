@@ -122,57 +122,65 @@ with st.sidebar:
 # ============================================================
 # LOAD MODEL
 # ============================================================
+# NEW - Replace with this
 @st.cache_resource
 def load_model_and_tokenizer():
     try:
-        # Try relative paths first (for deployment)
+        # Search all possible locations
         possible_model_paths = [
             'models/best_model.pt',
             'best_model.pt',
+            './models/best_model.pt',
+            './best_model.pt'
         ]
-        
+
         possible_tokenizer_paths = [
             'models/tokenizer',
             'tokenizer',
+            './models/tokenizer',
+            './tokenizer'
         ]
-        
-        # Find model
+
+        # Find model path
         model_path = None
         for path in possible_model_paths:
             if os.path.exists(path):
                 model_path = path
                 break
-        
-        # Find tokenizer
+
+        # Find tokenizer path
         tokenizer_path = None
         for path in possible_tokenizer_paths:
             if os.path.exists(path):
                 tokenizer_path = path
                 break
-        
-        if model_path is None or tokenizer_path is None:
-            return None, None, f"Model or tokenizer not found!"
-        
+
+        if model_path is None:
+            return None, None, "Model file not found. Make sure best_model.pt is uploaded."
+
+        if tokenizer_path is None:
+            return None, None, "Tokenizer not found. Make sure models/tokenizer/ is uploaded."
+
+        # Load device
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
         # Load tokenizer
         tokenizer = DistilBertTokenizer.from_pretrained(tokenizer_path)
-        
         # Load model
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model = DistilBertForSequenceClassification.from_pretrained(
             'distilbert-base-uncased',
             num_labels=2
         )
-        
+
         checkpoint = torch.load(model_path, map_location=device)
         model.load_state_dict(checkpoint['model_state_dict'])
         model = model.to(device)
         model.eval()
-        
+
         return model, tokenizer, None
-    
+
     except Exception as e:
         return None, None, str(e)
-
 
 with st.spinner('🔄 Loading AI model...'):
     model, tokenizer, error = load_model_and_tokenizer()
