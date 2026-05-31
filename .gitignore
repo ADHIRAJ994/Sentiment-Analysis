@@ -57,7 +57,6 @@ data/
 *.csv
 *.json
 !config.json
-!models/model_config.json
 *.pkl
 *.pickle
 *.h5
