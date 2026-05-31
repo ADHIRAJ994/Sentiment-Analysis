@@ -55,8 +55,9 @@ ipython_config.py
 # ============================================================
 data/
 *.csv
-# *.json
-# !config.json
+*.json
+!config.json
+!models/model_config.json
 *.pkl
 *.pickle
 *.h5
@@ -64,8 +65,19 @@ data/
 *.parquet
 *.feather
 
+# ============================================================
+# MODEL FILES (Use Git LFS or releases)
+# ============================================================
+models/best_model.pt
+models/tokenizer/
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+
 # Keep model config
-# !models/model_config.json
+!models/model_config.json
 
 # ============================================================
 # RESULTS & OUTPUTS
