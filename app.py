@@ -131,10 +131,6 @@ def find_path(possible_paths):
             return path
     return None
 
-st.sidebar.write("Working directory:", os.getcwd())
-st.sidebar.write("Model path:", model_path)
-st.sidebar.write("Tokenizer path:", tokenizer_path)
-@st.cache_resource
 @st.cache_resource
 def load_model_and_tokenizer():
     try:
@@ -151,7 +147,7 @@ def load_model_and_tokenizer():
             "tokenizer"
         ])
 
-        st.sidebar.write("Current directory:", os.getcwd())
+        st.sidebar.write("Working directory:", os.getcwd())
         st.sidebar.write("Model path:", model_path)
         st.sidebar.write("Tokenizer path:", tokenizer_path)
 
@@ -217,7 +213,7 @@ def load_model_and_tokenizer():
         st.code(traceback.format_exc())
 
         return None, None, str(e)
-        
+
 with st.spinner('🔄 Loading AI model...'):
     model, tokenizer, error = load_model_and_tokenizer()
 
