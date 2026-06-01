@@ -122,50 +122,79 @@ with st.sidebar:
 # ============================================================
 # LOAD MODEL
 # ============================================================
-# NEW - Replace with this
+import os
+import gdown
+import torch
+from transformers import (
+    DistilBertTokenizer,
+    DistilBertForSequenceClassification
+)
+import streamlit as st
+
+# ============================================================
+# GOOGLE DRIVE FILE IDs
+# Replace these with your actual Google Drive file IDs
+# ============================================================
+GDRIVE_FILES = {
+    'model': '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74',        # best_model.pt
+    'tokenizer_config': '1abc123...',                         # config.json
+    'tokenizer_json': '1def456...',                           # tokenizer.json
+    'tokenizer_config2': '1ghi789...',                        # tokenizer_config.json
+    'vocab': '1jkl012...',                                    # vocab.txt
+}
+
+def download_from_gdrive(file_id, output_path):
+    """Download file from Google Drive"""
+
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    gdown.download(url, output_path, quiet=False)
+
+    return os.path.exists(output_path)
+
+
 @st.cache_resource
 def load_model_and_tokenizer():
     try:
-        # Search all possible locations
-        possible_model_paths = [
-            'models/best_model.pt',
-            'best_model.pt',
-            './models/best_model.pt',
-            './best_model.pt'
-        ]
+        model_path = 'models/best_model.pt'
+        tokenizer_path = 'models/tokenizer'
 
-        possible_tokenizer_paths = [
-            'models/tokenizer',
-            'tokenizer',
-            './models/tokenizer',
-            './tokenizer'
-        ]
+        # Download model if not exists
+        if not os.path.exists(model_path):
+            st.info("Downloading model... please wait (one time only)")
 
-        # Find model path
-        model_path = None
-        for path in possible_model_paths:
-            if os.path.exists(path):
-                model_path = path
-                break
+            success = download_from_gdrive(
+                GDRIVE_FILES['model'],
+                model_path
+            )
 
-        # Find tokenizer path
-        tokenizer_path = None
-        for path in possible_tokenizer_paths:
-            if os.path.exists(path):
-                tokenizer_path = path
-                break
+            if not success:
+                return None, None, "Failed to download model"
 
-        if model_path is None:
-            return None, None, "Model file not found. Make sure best_model.pt is uploaded."
+        # Download tokenizer files if not exists
+        tokenizer_files = {
+            'config.json': GDRIVE_FILES['tokenizer_config'],
+            'tokenizer.json': GDRIVE_FILES['tokenizer_json'],
+            'tokenizer_config.json': GDRIVE_FILES['tokenizer_config2'],
+            'vocab.txt': GDRIVE_FILES['vocab']
+        }
 
-        if tokenizer_path is None:
-            return None, None, "Tokenizer not found. Make sure models/tokenizer/ is uploaded."
+        for filename, file_id in tokenizer_files.items():
+            filepath = os.path.join(tokenizer_path, filename)
+
+            if not os.path.exists(filepath):
+                download_from_gdrive(file_id, filepath)
 
         # Load device
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device(
+            'cuda' if torch.cuda.is_available() else 'cpu'
+        )
 
         # Load tokenizer
         tokenizer = DistilBertTokenizer.from_pretrained(tokenizer_path)
+
         # Load model
         model = DistilBertForSequenceClassification.from_pretrained(
             'distilbert-base-uncased',
