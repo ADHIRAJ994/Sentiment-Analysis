@@ -1,6 +1,7 @@
 wordcloud
 seaborn
 matplotlib
+torch
 pandas
 numpy
 scikit-learn
