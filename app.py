@@ -1,4 +1,5 @@
 import streamlit as st
+import traceback
 import torch
 from transformers import (
     DistilBertTokenizer,
@@ -130,71 +131,93 @@ def find_path(possible_paths):
             return path
     return None
 
-
+st.sidebar.write("Working directory:", os.getcwd())
+st.sidebar.write("Model path:", model_path)
+st.sidebar.write("Tokenizer path:", tokenizer_path)
+@st.cache_resource
 @st.cache_resource
 def load_model_and_tokenizer():
-    """
-    Load model and tokenizer
-    Works on local machine and Streamlit Cloud
-    """
     try:
-        # Possible model locations
+
         model_path = find_path([
-            'models/best_model.pt',
-            './models/best_model.pt',
-            'best_model.pt',
-            './best_model.pt'
+            "models/best_model.pt",
+            "./models/best_model.pt",
+            "best_model.pt"
         ])
 
-        # Possible tokenizer locations
         tokenizer_path = find_path([
-            'models/tokenizer',
-            './models/tokenizer',
-            'tokenizer',
-            './tokenizer'
+            "models/tokenizer",
+            "./models/tokenizer",
+            "tokenizer"
         ])
 
-        # Debug info
-        st.sidebar.caption(f"Model path: {model_path}")
-        st.sidebar.caption(f"Tokenizer path: {tokenizer_path}")
+        st.sidebar.write("Current directory:", os.getcwd())
+        st.sidebar.write("Model path:", model_path)
+        st.sidebar.write("Tokenizer path:", tokenizer_path)
 
         if model_path is None:
-            return None, None, (
-                "Model file not found. "
-                "Make sure best_model.pt is in the models/ folder."
+            raise FileNotFoundError(
+                "Could not find models/best_model.pt"
             )
 
         if tokenizer_path is None:
-            return None, None, (
-                "Tokenizer not found. "
-                "Make sure models/tokenizer/ folder exists."
+            raise FileNotFoundError(
+                "Could not find models/tokenizer/"
             )
 
-        # Set device
+        required_files = [
+            "vocab.txt",
+            "tokenizer_config.json"
+        ]
+
+        for file in required_files:
+            path = os.path.join(tokenizer_path, file)
+
+            if not os.path.exists(path):
+                raise FileNotFoundError(
+                    f"Missing tokenizer file: {path}"
+                )
+
         device = torch.device(
-            'cuda' if torch.cuda.is_available() else 'cpu'
+            "cuda" if torch.cuda.is_available() else "cpu"
         )
 
-        # Load tokenizer
-        tokenizer = DistilBertTokenizer.from_pretrained(tokenizer_path)
+        tokenizer = DistilBertTokenizer.from_pretrained(
+            tokenizer_path
+        )
 
-        # Load model architecture
         model = DistilBertForSequenceClassification.from_pretrained(
-            'distilbert-base-uncased',
+            "distilbert-base-uncased",
             num_labels=2
         )
 
-        # Load trained weights
-        checkpoint = torch.load(model_path, map_location=device)
-        model.load_state_dict(checkpoint['model_state_dict'])
-        model = model.to(device)
+        checkpoint = torch.load(
+            model_path,
+            map_location=device
+        )
+
+        if (
+            isinstance(checkpoint, dict)
+            and "model_state_dict" in checkpoint
+        ):
+            model.load_state_dict(
+                checkpoint["model_state_dict"]
+            )
+        else:
+            model.load_state_dict(checkpoint)
+
+        model.to(device)
         model.eval()
 
         return model, tokenizer, None
 
     except Exception as e:
-        return None, None, str(e)
+        import traceback
 
+        st.code(traceback.format_exc())
+
+        return None, None, str(e)
+        
 with st.spinner('🔄 Loading AI model...'):
     model, tokenizer, error = load_model_and_tokenizer()
 
