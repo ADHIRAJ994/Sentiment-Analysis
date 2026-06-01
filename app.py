@@ -2,7 +2,7 @@ import streamlit as st
 import traceback
 import torch
 from transformers import (
-    DistilBertTokenizer,
+    AutoTokenizer,
     DistilBertForSequenceClassification
 )
 import numpy as np
@@ -162,7 +162,7 @@ def load_model_and_tokenizer():
             )
 
         required_files = [
-            "vocab.txt",
+            "tokenizer.json",
             "tokenizer_config.json"
         ]
 
@@ -178,7 +178,7 @@ def load_model_and_tokenizer():
             "cuda" if torch.cuda.is_available() else "cpu"
         )
 
-        tokenizer = DistilBertTokenizer.from_pretrained(
+        tokenizer = AutoTokenizer.from_pretrained(
             tokenizer_path
         )
 
