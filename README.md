@@ -166,7 +166,7 @@ CONFIG = {
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/sentiment-analysis-dashboard.git
+git clone https://github.com/ADHIRAJ994/sentiment-analysis-dashboard.git
 cd sentiment-analysis-dashboard
 ```
 
@@ -535,12 +535,12 @@ SOFTWARE.
 **Adhiraj Chakravorty**
 
 - 📧 Email: [youradhi20@gmail.com]
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
+- 💼 LinkedIn: https://www.linkedin.com/in/adhiraj-chakravorty-788685344/
 - 🐱 GitHub: [@ADHIRAJ994](https://github.com/ADHIRAJ994)
 
 ### Project Links
 - 🔗 Repository: [github.com/ADHIRAJ994/sentiment-analysis-dashboard](https://github.com/ADHIRAJ994/sentiment-analysis-dashboard)
-- 🌐 Live Demo: [your-app.streamlit.app](https://your-app.streamlit.app)
+- 🌐 Live Demo: https://sentiment-analysis-y5kp2cxntkssecxadpvfa5.streamlit.app/
 
 ---
 
